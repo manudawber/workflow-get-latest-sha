@@ -14,7 +14,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v3
-      - run: cat config.txt
+      - run: cat config.txt || echo "No config file exists"
       - name: Update config
         run: date >> config.txt
       - name: Pull latest commits
@@ -30,6 +30,8 @@ jobs:
           commit_message: ${{ env.CI_COMMIT_MESSAGE }}
 
   access-config:
+    needs:
+      - update-config
     name: Access config
     runs-on: ubuntu-latest
     steps:
