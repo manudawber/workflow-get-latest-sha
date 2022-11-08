@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cat config.txt
+      - run: cat config.txt || echo "No config file exists"
       - name: Pull latest commits
         run: git pull --rebase --autostash
-      - run: cat config.txt
+      - run: cat config.txt || echo "No config file exists"
