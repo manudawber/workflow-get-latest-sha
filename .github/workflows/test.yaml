@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-config:
+    name: Update config
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+      - run: cat config.txt
+      - name: Update config
+        run: echo "$(date)" >> config.txt
+      - name: Pull latest commits
+        run: git pull --rebase --autostash
+      - name: Commit config changes
+        id: commit
+        uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          CI_COMMIT_MESSAGE: [skip ci] Update config files
+          CI_COMMIT_AUTHOR: HyBB-8
+        with:
+          commit_user_name: ${{ env.CI_COMMIT_AUTHOR }}
+          commit_message: ${{ env.CI_COMMIT_MESSAGE }}
+
+  access-config:
+    name: Access config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: cat config.txt
+      - name: Pull latest commits
+        run: git pull --rebase --autostash
+      - run: cat config.txt
